@@ -60,7 +60,7 @@
         <div class="flex items-center gap-2">
           <label class="text-sm text-gray-600">Mostrar:</label>
           <select
-            v-model="itemsPerPage"
+            v-model.number="itemsPerPage"
             class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option :value="5">5</option>
@@ -74,73 +74,76 @@
 
     <!-- Table View -->
     <div v-if="viewMode === 'table'" class="bg-white rounded-lg shadow overflow-hidden">
-      <div class="overflow-x-auto custom-scrollbar max-h-[600px] overflow-y-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50 sticky top-0 z-10">
-            <tr>
-              <th
-                v-for="column in columns"
-                :key="column.key"
-                @click="column.sortable !== false && sort(column.key)"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50"
-                :class="{ 'cursor-pointer hover:bg-gray-100': column.sortable !== false }"
+      <div class="overflow-x-auto custom-scrollbar">
+        <div class="max-h-[600px] overflow-y-auto custom-scrollbar">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50 sticky top-0 z-10">
+              <tr>
+                <th
+                  v-for="column in columns"
+                  :key="column.key"
+                  @click="column.sortable !== false && sort(column.key)"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50 whitespace-nowrap"
+                  :class="{ 'cursor-pointer hover:bg-gray-100': column.sortable !== false }"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>{{ column.label }}</span>
+                    <span v-if="column.sortable !== false && sortKey === column.key" class="text-blue-500">
+                      <svg v-if="sortOrder === 'asc'" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                      </svg>
+                      <svg v-else class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
+                      </svg>
+                    </span>
+                  </div>
+                </th>
+                <th v-if="actions" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50 sticky top-0 whitespace-nowrap">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                v-for="(item, index) in paginatedData"
+                :key="index"
+                class="hover:bg-gray-50 transition-colors"
               >
-                <div class="flex items-center gap-2">
-                  <span>{{ column.label }}</span>
-                  <span v-if="column.sortable !== false && sortKey === column.key" class="text-blue-500">
-                    <svg v-if="sortOrder === 'asc'" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                    </svg>
-                    <svg v-else class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" />
-                    </svg>
-                  </span>
-                </div>
-              </th>
-              <th v-if="actions" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50 sticky top-0">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr
-              v-for="(item, index) in paginatedData"
-              :key="index"
-              class="hover:bg-gray-50 transition-colors"
-            >
-              <td
-                v-for="column in columns"
-                :key="column.key"
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-              >
-                <slot :name="`cell-${column.key}`" :item="item" :value="item[column.key]">
-                  {{ item[column.key] }}
-                </slot>
-              </td>
-              <td v-if="actions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <slot name="actions" :item="item">
-                  <button
-                    @click="$emit('edit', item)"
-                    class="text-blue-600 hover:text-blue-900 mr-3"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    @click="$emit('delete', item)"
-                    class="text-red-600 hover:text-red-900"
-                  >
-                    Eliminar
-                  </button>
-                </slot>
-              </td>
-            </tr>
-            <tr v-if="paginatedData.length === 0">
-              <td :colspan="columns.length + (actions ? 1 : 0)" class="px-6 py-8 text-center text-gray-500">
-                No se encontraron resultados
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <td
+                  v-for="column in columns"
+                  :key="column.key"
+                  class="px-6 py-4 text-sm text-gray-900"
+                  :class="column.wrap === false ? 'whitespace-nowrap' : ''"
+                >
+                  <slot :name="`cell-${column.key}`" :item="item" :value="item[column.key]">
+                    {{ item[column.key] }}
+                  </slot>
+                </td>
+                <td v-if="actions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <slot name="actions" :item="item">
+                    <button
+                      @click="$emit('edit', item)"
+                      class="text-blue-600 hover:text-blue-900 mr-3"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      @click="$emit('delete', item)"
+                      class="text-red-600 hover:text-red-900"
+                    >
+                      Eliminar
+                    </button>
+                  </slot>
+                </td>
+              </tr>
+              <tr v-if="paginatedData.length === 0">
+                <td :colspan="columns.length + (actions ? 1 : 0)" class="px-6 py-8 text-center text-gray-500">
+                  No se encontraron resultados
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 

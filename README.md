@@ -1,38 +1,71 @@
-# datatable
+# DataTable Demo Project
 
-This template should help get you started developing with Vue 3 in Vite.
+Este proyecto es una demostración avanzada de componentes de tablas de datos (DataTables) construidos con **Vue 3**, **Vite** y **Tailwind CSS**. Incluye una arquitectura modular con componentes reutilizables, gestión de rutas y un diseño premium.
 
-## Recommended IDE Setup
+## 🚀 Características Principales
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Componente DataTable Base**: Paginación inteligente, ordenamiento por columnas y filtrado reactivo.
+- **Componente DataTable con Vista de Tarjetas**: Capacidad de alternar entre vista de tabla clásica y una cuadrícula de tarjetas (Cards).
+- **Diseño Premium**: Interfaz moderna con sombras suaves, tipografía elegante y una barra de desplazamiento personalizada vibrante.
+- **Rutas Dinámicas**: Navegación fluida entre diferentes ejemplos de implementación.
+- **Personalización por Slots**: Control total sobre el renderizado de celdas, acciones y el diseño de las tarjetas.
 
-## Recommended Browser Setup
+---
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## 📸 Vista Previa del Sistema
 
-## Customize configuration
+### Barra de Navegación
+Permite alternar entre las diferentes vistas del proyecto de forma intuitiva.
+![Navegación](./public/assets/docs/navigation.png)
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### Vista de Tabla de Datos
+Una tabla robusta con encabezados pegajosos (sticky) y desplazamiento horizontal para múltiples columnas.
+![Vista de Tabla](./public/assets/docs/table_view.png)
 
-## Project Setup
+### Vista de Tarjetas (Card View)
+Una representación visual y moderna para dispositivos móviles o perfiles de usuario.
+![Vista de Tarjetas](./public/assets/docs/card_view.png)
 
+---
+
+## 📂 Estructura del Proyecto
+
+```text
+src/
+├── components/
+│   ├── datatable.vue       # Componente base de tabla
+│   └── datatableCard.vue   # Componente extendido con vista de tarjetas
+├── views/
+│   ├── datatable.vue       # Implementación básica (Route: /)
+│   └── datatableCard.vue   # Implementación compleja con fotos (Route: /card)
+├── router/
+│   └── index.js            # Configuración de Vue Router
+└── App.vue                 # Layout principal con navegación
+```
+
+---
+
+## 🛠️ Configuración e Instalación
+
+### Instalación de dependencias
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
-
+### Ejecutar en modo desarrollo
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
-
+### Construcción para producción
 ```sh
 npm run build
 ```
+
+---
+
+## 📄 Notas de Implementación
+
+- **Paginación**: Se implementó una lógica de paginación inteligente que muestra páginas intermedias y elipses (`...`) para manejar grandes conjuntos de datos de forma limpia.
+- **Reactividad**: El filtrado (búsqueda) reinicia automáticamente la paginación para una mejor experiencia de usuario.
+- **Estilos**: Se utilizó **Tailwind CSS v4** para un sistema de diseño rápido y consistente.
